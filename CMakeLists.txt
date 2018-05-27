@@ -15,9 +15,9 @@ elseif (${CURRENCY} STREQUAL "BTC")
     add_definitions(-DBITPRIM_CURRENCY_BTC)
 elseif (${CURRENCY} STREQUAL "LTC")
     add_definitions(-DBITPRIM_CURRENCY_LTC)
-else()
+else ()
     message(FATAL_ERROR "Invalid Cryptocurrency: ${CURRENCY}")
-endif()
+endif ()
 
 message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
 
@@ -25,13 +25,19 @@ message(STATUS "Bitprim: Cryptocurrency: ${CURRENCY}")
 #==============================================================================
 if (EXISTS ${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
     include(${CMAKE_SOURCE_DIR}/bitprimbuildinfo.cmake)
-else()
-    message( STATUS "bitprimbuildinfo doent exists")
-endif()
+else ()
+    message(STATUS "bitprimbuildinfo doent exists")
+endif ()
 
 # Executable files.
 #==============================================================================
-add_executable(bitprim-dojo console/main.cpp)
+add_executable(bitprim-dojo console/main.cpp src/wallet/wallet_functions.cpp)
+
+# Includes.
+#==============================================================================
+target_include_directories(bitprim-dojo PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
 
 # Libraries.
 #==============================================================================
