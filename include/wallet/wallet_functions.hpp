@@ -48,6 +48,8 @@ public:
   libbitcoin::wallet::payment_address
   cashAddr_to_payment_address(std::string const &address, bool mainnet = true);
 
+  //TODO: add method for mnemonics functions like mnemonic-new, mnemonic-to-seed, hd-new
+
 };
 } //end namespace bitprim
 
