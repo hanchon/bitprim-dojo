@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include <wallet/wallet_functions.hpp>
+#include <simple_web_client/requester.hpp>
 
 namespace bitprim {
 
@@ -78,11 +79,31 @@ void generate_addrs() {
             << std::endl;
 
 }
+
+void send_curl() {
+  http_requester requester("localhost:18336");
+
+  std::string query = requester.create_query("getinfo", "\"\"");
+  auto reply = requester.request(query);
+  if (reply.first) {
+    std::cout << reply.second << std::endl;
+  }
+
+  query = requester.create_query("getaddresstxids", "[{\"addresses\": [\"n3GNqMveyvaPvUbH469vDRadqpJMPc84JA\"]}]");
+  auto reply2 = requester.request(query);
+  if (reply2.first) {
+    std::cout << reply2.second << std::endl;
+  }
+
+}
+
 } //end namespace bitprim
 
 int main() {
   std::cout << "Wallet functions: " << std::endl;
   bitprim::generate_addrs();
+  std::cout << "Sending curls" << std::endl;
+  bitprim::send_curl();
   return 0;
 }
 

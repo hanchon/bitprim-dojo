@@ -31,7 +31,9 @@ endif ()
 
 # Executable files.
 #==============================================================================
-add_executable(bitprim-dojo console/main.cpp src/wallet/wallet_functions.cpp)
+add_executable(bitprim-dojo console/main.cpp
+        src/wallet/wallet_functions.cpp
+        src/simple_web_client/requester.cpp)
 
 # Includes.
 #==============================================================================
