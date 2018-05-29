@@ -6,6 +6,7 @@
 
 #include <wallet/wallet_functions.hpp>
 #include <simple_web_client/requester.hpp>
+#include <wallet/transaction_functions.hpp>
 
 namespace bitprim {
 
@@ -104,6 +105,38 @@ int main() {
   bitprim::generate_addrs();
   std::cout << "Sending curls" << std::endl;
   bitprim::send_curl();
+
+
+  // TODO: make the tx example using the output of the previous function
+  std::cout << "Creating txn" << std::endl;
+  bitprim::bitprim_transaction transaction;
+  std::vector<std::string> inputs;
+  inputs.push_back("97e06e49dfdd26c5a904670971ccf4c7fe7d9da53cb379bf9b442fc9427080b3:0");
+  std::vector<std::string> outputs;
+  outputs.push_back("1966U1pjj15tLxPXZ19U48c99EJDkdXeqb:45000");
+  std::cout << transaction.tx_encode(inputs, outputs) << std::endl;
+
+  std::cout << "Signing txn" << std::endl;
+  std::cout << transaction.input_signature("4ce3eb6bd06c224e3c355352a488720efc5ac9fe527a219ad35178c3cf762350",
+                                           "dup hash160 [c564c740c6900b93afc9f1bdaef0a9d466adf6ee] equalverify checksig",
+                                           "01000000017d01943c40b7f3d8a00a2d62fa1d560bf739a2368c180615b0a7937c0e883e7c0000000000ffffffff01c8af0000000000001976a91458b7a60f11a904feef35a639b6048de8dd4d9f1c88ac00000000")
+            << std::endl;
+
+  std::cout << "Adding the signature to the txn" << std::endl;
+
+////   TODO: public key is generated using ec-to-public 4ce3eb6bd06c224e3c355352a488720efc5ac9fe527a219ad35178c3cf762350
+////  bitprim::bitprim_wallet wallet_functions;
+////  libbitcoin::ec_secret a;
+////  libbitcoin::decode_base16(a, "4ce3eb6bd06c224e3c355352a488720efc5ac9fe527a219ad35178c3cf762350");
+////  auto pub_key = wallet_functions.priv_key_to_public(a, true);
+////  std::cout << pub_key << std::endl;
+
+  std::cout << transaction.input_set(
+      "304402206f6a28f4f8c94b749164425c4ca3c0f400b6e4abb86c08094025b559aff79ad90220727276b10633436b96aee3abeea3826975920e99d09f4325891499f037e1b24e01",
+      "03e208f5403383c77d5832a268c9f71480f6e7bfbdfa44904becacfad66163ea31",
+      "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff01c8af0000000000001976a91458b7a60f11a904feef35a639b6048de8dd4d9f1c88ac00000000")
+            << std::endl;
+
   return 0;
 }
 
