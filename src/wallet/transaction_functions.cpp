@@ -46,9 +46,9 @@ static bool push_scripts(std::vector<libbitcoin::chain::output> &outputs,
 }
 
 std::string bitprim_transaction::tx_encode(const std::vector<std::string> &output_to_spend,
-                                           const std::vector<std::string> &destiny) {
+                                           const std::vector<std::string> &destiny, const std::string &message) const {
 
-  const auto locktime = 0;
+  const uint32_t locktime = 0;
   const auto tx_version = 1;
   const auto script_version = 5;
 
@@ -67,6 +67,14 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
     }
   }
 
+  //// Experimental use of OP_RETURN
+  if (message != "") {
+    libbitcoin::data_chunk encoded_message;
+    libbitcoin::decode_base16(encoded_message, message);
+    libbitcoin::machine::operation::list op_codes = {{libbitcoin::machine::opcode::return_}, {encoded_message}};
+    tx.outputs().push_back({0, op_codes});
+  }
+
   if (tx.is_locktime_conflict()) {
     std::cout << "Locktime conflict" << std::endl;
     return "Error";
@@ -81,13 +89,21 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
 
 std::string bitprim_transaction::input_signature(const std::string &raw_private_key,
                                                  const std::string &raw_output_script,
-                                                 const std::string &raw_tx) {
+                                                 const std::string &raw_tx, const uint64_t &amount) const {
+
+  bool bch = false;
   // Bound parameters.
   const auto anyone_can_pay = false;
   // TODO: index should be a parameter to sign the inputs != 0
   const auto index = 0;
-  // TODO: for BCH it should add | forkid
-  const auto sign_type = 0x01; //all
+  auto sign_type = 0x01; //all
+  if (amount != libbitcoin::max_uint64) {
+    // Verion 0 endorsment is going to be used (only BCH is allowed)
+    // TODO: support segwit wallets on BTC/LTC
+    bch = true;
+    // Add 0x40 fork id to the sign type
+    sign_type |= 0x40;
+  }
 
   const libbitcoin::explorer::config::transaction temp_tx(raw_tx);
   const libbitcoin::chain::transaction tx(temp_tx);
@@ -109,10 +125,25 @@ std::string bitprim_transaction::input_signature(const std::string &raw_private_
   }
 
   libbitcoin::endorsement endorse;
-  if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, contract, tx, index,
-                                                     hash_type)) {
-    std::cout << "Input sign failed" << std::endl;
-    return "Error";
+  if (bch) {
+    // BCH enodrsement using script_version::zero (segwit sign algorithm)
+    if (!libbitcoin::chain::script::create_endorsement(endorse,
+                                                       private_key,
+                                                       contract,
+                                                       tx,
+                                                       index,
+                                                       hash_type,
+                                                       libbitcoin::chain::script::script_version::zero,
+                                                       amount)) {
+      std::cout << "Input sign failed" << std::endl;
+      return "Error";
+    }
+  } else {
+    if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, contract, tx, index,
+                                                       hash_type)) {
+      std::cout << "Input sign failed" << std::endl;
+      return "Error";
+    }
   }
 
   return libbitcoin::encode_base16(endorse);
@@ -120,7 +151,7 @@ std::string bitprim_transaction::input_signature(const std::string &raw_private_
 
 std::string bitprim_transaction::input_set(const std::string &signature,
                                            const std::string &public_key,
-                                           const std::string &raw_tx) {
+                                           const std::string &raw_tx) const {
 
   // Bound parameters.
   // TODO: index should be a parameter to set the value when inputs != 0
