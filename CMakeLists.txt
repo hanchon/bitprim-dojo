@@ -29,9 +29,9 @@ else ()
     message(STATUS "bitprimbuildinfo doent exists")
 endif ()
 
-# Executable files.
+# Common cpp/ipp files for the example and cli.
 #==============================================================================
-add_executable(bitprim-dojo console/main.cpp
+set (SRC_FILES
         src/wallet/wallet_functions.cpp
         src/simple_web_client/requester.cpp
         src/wallet/transaction_functions.cpp
@@ -45,6 +45,15 @@ add_executable(bitprim-dojo console/main.cpp
         src/utils/ec_private.cpp
         src/utils/endorsement.cpp)
 
+
+# BIPTIRM EXAMPLE EXE/INCLUDES/LIBS.
+#==============================================================================
+
+# Executable files.
+#==============================================================================
+add_executable(bitprim-dojo dojo/main.cpp
+        ${SRC_FILES})
+
 # Includes.
 #==============================================================================
 target_include_directories(bitprim-dojo PUBLIC
@@ -54,3 +63,22 @@ target_include_directories(bitprim-dojo PUBLIC
 # Libraries.
 #==============================================================================
 target_link_libraries(bitprim-dojo PUBLIC ${CONAN_LIBS})
+
+
+# BIPTIRM CLI EXE/INCLUDES/LIBS.
+#==============================================================================
+
+# Executable files.
+#==============================================================================
+add_executable(bitprim-cli cli/main.cpp
+        ${SRC_FILES})
+
+# Includes.
+#==============================================================================
+target_include_directories(bitprim-cli PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
+
+# Libraries.
+#==============================================================================
+target_link_libraries(bitprim-cli PUBLIC ${CONAN_LIBS})
