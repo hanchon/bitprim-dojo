@@ -14,13 +14,33 @@ request_map load_request_map() {
   return request_map{
       /* Wallet functions */
       {"priv_key", process_priv_key},
-      {"seed_to_wif",process_seed_to_wif},
+      {"seed_to_wif", process_seed_to_wif},
       {"seed_to_pub", process_seed_to_pub},
-      {"seed_to_wallet",process_seed_to_wallet},
-      {"seed_to_cashaddr",process_seed_to_cashaddr},
+      {"seed_to_wallet", process_seed_to_wallet},
+      {"seed_to_cashaddr", process_seed_to_cashaddr},
       /* RPC functions */
       {"getinfo", process_getinfo},
-      {"getaddresstxids",process_getaddresstxids}
+      {"getrawtransaction", process_getrawtransaction},
+      {"getaddressbalance", process_getaddressbalance},
+      {"getspentinfo", process_getspentinfo},
+      {"getaddresstxids", process_getaddresstxids},
+      {"getaddressdeltas", process_getaddressdeltas},
+      {"getaddressutxos", process_getaddressutxos},
+      {"getblockhashes", process_getblockhashes},
+      {"getaddressmempool", process_getaddressmempool},
+      {"getbestblockhash", process_getbestblockhash},
+      {"getblock", process_getblock},
+      {"getblockhash", process_getblockhash},
+      {"getblockchaininfo", process_getblockchaininfo},
+      {"getblockheader", process_getblockheader},
+      {"getblockcount", process_getblockcount},
+      {"getdifficulty", process_getdifficulty},
+      {"getchaintips", process_getchaintips},
+      {"validateaddress", process_validateaddress},
+      {"getblocktemplate", process_getblocktemplate},
+      {"getmininginfo", process_getmininginfo},
+      {"submitblock", process_submitblock},
+      {"sendrawtransaction", process_sendrawtransaction}
 
   };
 }
