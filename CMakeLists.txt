@@ -71,7 +71,8 @@ target_link_libraries(bitprim-dojo PUBLIC ${CONAN_LIBS})
 # Executable files.
 #==============================================================================
 add_executable(bitprim-cli cli/main.cpp
-        ${SRC_FILES})
+        ${SRC_FILES}
+        cli/process_requests.hpp)
 
 # Includes.
 #==============================================================================
