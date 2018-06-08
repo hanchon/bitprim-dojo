@@ -50,7 +50,7 @@ void generate_addrs() {
 
   // Creates a mainnet wallet using the public key.
   mainnet = true;
-  auto new_wallet = wallet_functions.pub_key_to_addr(pub_key, mainnet);
+  auto new_wallet = wallet_functions.pub_key_to_addr(pub_key_comp, mainnet);
   std::cout << "Wallet Address (Mainnet):      " << new_wallet.encoded()
             << std::endl;
   std::cout << "Wallet cashAddress (Mainnet):  " << new_wallet.encoded_cashaddr()
@@ -69,7 +69,7 @@ void generate_addrs() {
 
   // Creates a tesnet wallet using the public key.
   mainnet = false;
-  new_wallet = wallet_functions.pub_key_to_addr(pub_key, mainnet);
+  new_wallet = wallet_functions.pub_key_to_addr(pub_key_comp, mainnet);
   std::cout << "Wallet Address (Testnet):      " << new_wallet.encoded()
             << std::endl;
   std::cout << "Wallet cashAddress (Testnet):  " << new_wallet.encoded_cashaddr()
@@ -104,39 +104,105 @@ void send_curl() {
 
 }
 
-} //end namespace bitprim
+void create_bch_testnet_tx() {
+  const std::string seed = "fffb587496cc54912bbcef874fa9a61a";
 
-int main() {
-  std::cout << "Wallet functions: " << std::endl;
-  bitprim::generate_addrs();
-  std::cout << "Sending curls" << std::endl;
-  bitprim::send_curl();
-
-
-  // TODO: make the tx example using the output of the previous function
-  std::cout << "Creating txn" << std::endl;
   bitprim::bitprim_transaction transaction;
+
+  /******** Create transaction ********/
   std::vector<std::string> inputs;
   inputs.push_back("980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393:1");
   std::vector<std::string> outputs;
   outputs.push_back("mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:199999000");
-  std::cout << transaction.tx_encode(inputs, outputs) << std::endl;
 
-  std::cout << "Signing txn" << std::endl;
-  std::cout << transaction.input_signature("8b1e51a4ec92844625db3e7a99444939243907ad3480e54622b9109c17693be9",
-                                           "dup hash160 [b43ff4532569a00bcab4ce60f87cdeebf985b69a] equalverify checksig",
-                                           "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff0118beeb0b000000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000",
-                                           200000000)
-            << std::endl;
+  const auto txn = transaction.tx_encode(inputs, outputs);
 
-  std::cout << "Adding the signature to the txn" << std::endl;
+  /********* Sign the input *********/
+  // Previous output values
+  const std::string prev_output_script = "dup hash160 [b43ff4532569a00bcab4ce60f87cdeebf985b69a] equalverify checksig";
+  const uint64_t prev_output_amount = 200000000;
 
+  // Seed to private
+  bitprim::bitprim_wallet wallet_functions;
+  const auto priv_key = wallet_functions.generate_priv_key(seed);
+  const auto priv_key_string = libbitcoin::encode_base16(priv_key);
 
-  std::cout << transaction.input_set(
-      "30440220433c405e4cb7698ad5f58e0ea162c3c3571d46d96ff1b3cb9232a06eba3b444d02204bc5f48647c0f052ade7cf85eac3911f7afbfa69fa5ebd92084191a5da33f88d41",
-      "027a45d4abb6ebb00214796e2c7cf61d18c9185ba771fe9ed75b303eb7a8e9028b",
-      "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff0118beeb0b000000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000")
-            << std::endl;
+  // Create signature
+  const auto signature = transaction.input_signature(priv_key_string, prev_output_script, txn, prev_output_amount);
+
+  /***** Add signature to the txn *****/
+  // Public key (this is the same used to generate the prev_output_script
+  const auto pub_key = wallet_functions.priv_key_to_public(priv_key, true);
+
+  // Add the signature + pubkey to the txn
+  const auto result_txn = transaction.input_set(signature, pub_key.encoded(), txn);
+
+  std::cout << "BCH transaction: " << std::endl;
+  std::cout << result_txn << std::endl;
+
+  libbitcoin::data_chunk temp_txn;
+  libbitcoin::decode_base16(temp_txn, result_txn);
+  std::cout << "BCH txn hash: " << libbitcoin::encode_hash(libbitcoin::bitcoin_hash(temp_txn)) << std::endl;
+
+}
+
+void create_btc_testnet_tx() {
+  // It's the same as the BCH txn but it can be signed with the old method (input_signature_old)
+  // If the txn is going to be signed with the new method (input_signature), the bch parameter must be false
+
+  const std::string seed = "fffb587496cc54912bbcef874fa9a61a";
+
+  bitprim::bitprim_transaction transaction;
+
+  /******** Create transaction ********/
+  std::vector<std::string> inputs;
+  inputs.push_back("47658befd5c1ba5b9e4f9db2d819a884033d2439b1a8e92e04a3ddfbb9c26bd4:0");
+  std::vector<std::string> outputs;
+  outputs.push_back("mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:37200");
+
+  const auto txn = transaction.tx_encode(inputs, outputs);
+
+  /********* Sign the input *********/
+  // Previous output values
+  const std::string prev_output_script = "dup hash160 [b43ff4532569a00bcab4ce60f87cdeebf985b69a] equalverify checksig";
+  // Amount is not requiered when signing with the old method
+  //const uint64_t prev_output_amount = 38200;
+
+  // Seed to private
+  bitprim::bitprim_wallet wallet_functions;
+  const auto priv_key = wallet_functions.generate_priv_key(seed);
+  const auto priv_key_string = libbitcoin::encode_base16(priv_key);
+
+  // Create signature
+  const auto signature = transaction.input_signature_old(priv_key_string, prev_output_script, txn);
+
+  /***** Add signature to the txn *****/
+  // Public key (this is the same used to generate the prev_output_script
+  const auto pub_key = wallet_functions.priv_key_to_public(priv_key, true);
+
+  // Add the signature + pubkey to the txn
+  const auto result_txn = transaction.input_set(signature, pub_key.encoded(), txn);
+
+  std::cout << "BTC transaction: " << std::endl;
+  std::cout << result_txn << std::endl;
+
+  libbitcoin::data_chunk temp_txn;
+  libbitcoin::decode_base16(temp_txn, result_txn);
+  std::cout << "BTC txn hash: " << libbitcoin::encode_hash(libbitcoin::bitcoin_hash(temp_txn)) << std::endl;
+
+}
+
+} //end namespace bitprim
+
+int main() {
+  std::cout << "/*********** Wallet functions ***********/" << std::endl;
+  bitprim::generate_addrs();
+  std::cout << std::endl << "/*********** Sending curls ***********/" << std::endl;
+  bitprim::send_curl();
+  std::cout << std::endl << "/*********** Create a BCH txn ***********/" << std::endl;
+  bitprim::create_bch_testnet_tx();
+  std::cout << std::endl << "/*********** Create a BTC txn ***********/" << std::endl;
+  bitprim::create_btc_testnet_tx();
 
   return 0;
 }
