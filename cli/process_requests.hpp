@@ -18,7 +18,7 @@ static const std::string SERVER = "localhost:18332";
 
 // Utis:
 bool char_to_bool(char *in, bool &out) {
-  // char can only be "true" or "false"
+  // char * can only be "true" or "false"
   std::stringstream ss(in);
   if (!(ss >> std::boolalpha >> out)) {
     return false;
@@ -37,8 +37,8 @@ std::vector<std::string> comma_delimited_to_array(char *argv) {
   return result;
 }
 
-//TODO: validate paramertes types and count
-//TODO: split this file in subclases
+// TODO: validate parameters types and count
+// TODO: split this file in subclasses
 
 /************** WALLET FUNCTIONS **************/
 std::string process_priv_key(int argc, char *argv[]) {
@@ -213,7 +213,6 @@ std::string process_sendrawtransaction(int argc, char *argv[]) {
 }
 
 /************** TRANSACTION FUNCTIONS **************/
-// TODO: add the create tx, add input and sign txn functions
 std::string process_create_txn(int argc, char *argv[]) {
   // example: create_txn -i "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393:1" -o "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:199999000"
   std::vector<std::string> inputs;

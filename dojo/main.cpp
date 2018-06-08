@@ -165,7 +165,7 @@ void create_btc_testnet_tx() {
   /********* Sign the input *********/
   // Previous output values
   const std::string prev_output_script = "dup hash160 [b43ff4532569a00bcab4ce60f87cdeebf985b69a] equalverify checksig";
-  // Amount is not requiered when signing with the old method
+  // Amount is not required when signing with the old method
   //const uint64_t prev_output_amount = 38200;
 
   // Seed to private

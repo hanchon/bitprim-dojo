@@ -198,7 +198,7 @@ std::string bitprim_transaction::input_set(const std::string &signature,
 
   tx_out.inputs()[index].set_script(script);
 
-  // TODO: when using bitprim version 0.10 set the witness param
+  // TODO: when signing a segwit txn, the to_data function should use witness=true
   return libbitcoin::encode_base16(tx_out.to_data(true));
 
 }
