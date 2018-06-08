@@ -52,7 +52,7 @@ class BitprimNetworkConan(ConanFile):
     # package_files = "build/lbitprim-network.a"
     build_policy = "missing"
 
-    requires = (("bitprim-core/0.10.0@bitprim/testing"))
+    requires = (("bitprim-core/0.11.0@bitprim/testing"))
 
     @property
     def msvc_mt_build(self):

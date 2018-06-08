@@ -16,7 +16,7 @@ void generate_addrs() {
   bitprim_wallet wallet_functions;
 
   // The seed must be base 16 encoded and at least 32 char long.
-  std::string priv_key_seed = "aaeb587496cc54912bbcef874fa9a61c";
+  std::string priv_key_seed = "fffb587496cc54912bbcef874fa9a61a";
 
   // Creates a private key using the seed.
   auto priv_key = wallet_functions.generate_priv_key(priv_key_seed);
@@ -40,6 +40,12 @@ void generate_addrs() {
   auto pub_key = wallet_functions.priv_key_to_public(priv_key);
   // pub_key.enconded() can be used to get the string
   std::cout << "Public key:                    " << pub_key << std::endl
+            << std::endl;
+
+  // Creates a public key compressed using the private key.
+  auto pub_key_comp = wallet_functions.priv_key_to_public(priv_key, true);
+  // pub_key_comp.enconded() can be used to get the string
+  std::cout << "Public key Compressed:         " << pub_key_comp << std::endl
             << std::endl;
 
   // Creates a mainnet wallet using the public key.
@@ -111,30 +117,25 @@ int main() {
   std::cout << "Creating txn" << std::endl;
   bitprim::bitprim_transaction transaction;
   std::vector<std::string> inputs;
-  inputs.push_back("97e06e49dfdd26c5a904670971ccf4c7fe7d9da53cb379bf9b442fc9427080b3:0");
+  inputs.push_back("980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393:1");
   std::vector<std::string> outputs;
-  outputs.push_back("1966U1pjj15tLxPXZ19U48c99EJDkdXeqb:45000");
+  outputs.push_back("mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:199999000");
   std::cout << transaction.tx_encode(inputs, outputs) << std::endl;
 
   std::cout << "Signing txn" << std::endl;
-  std::cout << transaction.input_signature("4ce3eb6bd06c224e3c355352a488720efc5ac9fe527a219ad35178c3cf762350",
-                                           "dup hash160 [c564c740c6900b93afc9f1bdaef0a9d466adf6ee] equalverify checksig",
-                                           "01000000017d01943c40b7f3d8a00a2d62fa1d560bf739a2368c180615b0a7937c0e883e7c0000000000ffffffff01c8af0000000000001976a91458b7a60f11a904feef35a639b6048de8dd4d9f1c88ac00000000")
+  std::cout << transaction.input_signature("8b1e51a4ec92844625db3e7a99444939243907ad3480e54622b9109c17693be9",
+                                           "dup hash160 [b43ff4532569a00bcab4ce60f87cdeebf985b69a] equalverify checksig",
+                                           "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff0118beeb0b000000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000",
+                                           200000000)
             << std::endl;
 
   std::cout << "Adding the signature to the txn" << std::endl;
 
-////   TODO: public key is generated using ec-to-public 4ce3eb6bd06c224e3c355352a488720efc5ac9fe527a219ad35178c3cf762350
-////  bitprim::bitprim_wallet wallet_functions;
-////  libbitcoin::ec_secret a;
-////  libbitcoin::decode_base16(a, "4ce3eb6bd06c224e3c355352a488720efc5ac9fe527a219ad35178c3cf762350");
-////  auto pub_key = wallet_functions.priv_key_to_public(a, true);
-////  std::cout << pub_key << std::endl;
 
   std::cout << transaction.input_set(
-      "304402206f6a28f4f8c94b749164425c4ca3c0f400b6e4abb86c08094025b559aff79ad90220727276b10633436b96aee3abeea3826975920e99d09f4325891499f037e1b24e01",
-      "03e208f5403383c77d5832a268c9f71480f6e7bfbdfa44904becacfad66163ea31",
-      "0100000001b3807042c92f449bbf79b33ca59d7dfec7f4cc71096704a9c526dddf496ee0970000000000ffffffff01c8af0000000000001976a91458b7a60f11a904feef35a639b6048de8dd4d9f1c88ac00000000")
+      "30440220433c405e4cb7698ad5f58e0ea162c3c3571d46d96ff1b3cb9232a06eba3b444d02204bc5f48647c0f052ade7cf85eac3911f7afbfa69fa5ebd92084191a5da33f88d41",
+      "027a45d4abb6ebb00214796e2c7cf61d18c9185ba771fe9ed75b303eb7a8e9028b",
+      "01000000019373b022dfb99400ee40b8987586aea9e158f3b0c62343d59896c212cee60d980100000000ffffffff0118beeb0b000000001976a914b43ff4532569a00bcab4ce60f87cdeebf985b69a88ac00000000")
             << std::endl;
 
   return 0;

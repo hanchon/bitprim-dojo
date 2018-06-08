@@ -71,6 +71,7 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
   if (message != "") {
     libbitcoin::data_chunk encoded_message;
     libbitcoin::decode_base16(encoded_message, message);
+    //TODO: calculate the message's size and add that op_code before the message
     libbitcoin::machine::operation::list op_codes = {{libbitcoin::machine::opcode::return_}, {encoded_message}};
     tx.outputs().push_back({0, op_codes});
   }
@@ -87,21 +88,56 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
   return buffer.str();
 }
 
-std::string bitprim_transaction::input_signature(const std::string &raw_private_key,
-                                                 const std::string &raw_output_script,
-                                                 const std::string &raw_tx, const uint64_t &amount) const {
+std::string bitprim_transaction::input_signature_old(const std::string &raw_private_key,
+                                                     const std::string &raw_output_script,
+                                                     const std::string &raw_tx, const int &index) const {
 
-  bool bch = false;
   // Bound parameters.
   const auto anyone_can_pay = false;
-  // TODO: index should be a parameter to sign the inputs != 0
-  const auto index = 0;
+
+  // TODO:: the sign_type should be a parameter
   auto sign_type = 0x01; //all
-  if (amount != libbitcoin::max_uint64) {
-    // Verion 0 endorsment is going to be used (only BCH is allowed)
-    // TODO: support segwit wallets on BTC/LTC
-    bch = true;
-    // Add 0x40 fork id to the sign type
+
+  const libbitcoin::explorer::config::transaction temp_tx(raw_tx);
+  const libbitcoin::chain::transaction tx(temp_tx);
+
+  const libbitcoin::explorer::config::ec_private temp_priv(raw_private_key);
+  const libbitcoin::ec_secret &private_key(temp_priv);
+
+  const libbitcoin::explorer::config::script &temp_contract(raw_output_script);
+  const libbitcoin::chain::script &contract(temp_contract);
+
+  if (index >= tx.inputs().size()) {
+    std::cout << "Input index out of range" << std::endl;
+    return "Error";
+  }
+
+  uint8_t hash_type = (libbitcoin::machine::sighash_algorithm) sign_type;
+  if (anyone_can_pay) {
+    hash_type |= libbitcoin::machine::sighash_algorithm::anyone_can_pay;
+  }
+
+  libbitcoin::endorsement endorse;
+  if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, contract, tx, index,
+                                                     hash_type)) {
+    std::cout << "Input sign failed" << std::endl;
+    return "Error";
+  }
+  return libbitcoin::encode_base16(endorse);
+}
+
+std::string bitprim_transaction::input_signature(const std::string &raw_private_key,
+                                                 const std::string &raw_output_script,
+                                                 const std::string &raw_tx,
+                                                 const uint64_t &amount,
+                                                 const int &index,
+                                                 const bool bch) const {
+  // Bound parameters.
+  const auto anyone_can_pay = false;
+
+  // TODO:: the sign_type should be a parameter
+  auto sign_type = 0x01; //all
+  if (bch) {
     sign_type |= 0x40;
   }
 
@@ -125,25 +161,17 @@ std::string bitprim_transaction::input_signature(const std::string &raw_private_
   }
 
   libbitcoin::endorsement endorse;
-  if (bch) {
-    // BCH enodrsement using script_version::zero (segwit sign algorithm)
-    if (!libbitcoin::chain::script::create_endorsement(endorse,
-                                                       private_key,
-                                                       contract,
-                                                       tx,
-                                                       index,
-                                                       hash_type,
-                                                       libbitcoin::chain::script::script_version::zero,
-                                                       amount)) {
-      std::cout << "Input sign failed" << std::endl;
-      return "Error";
-    }
-  } else {
-    if (!libbitcoin::chain::script::create_endorsement(endorse, private_key, contract, tx, index,
-                                                       hash_type)) {
-      std::cout << "Input sign failed" << std::endl;
-      return "Error";
-    }
+  // BCH enodrsement using script_version::zero (segwit sign algorithm)
+  if (!libbitcoin::chain::script::create_endorsement(endorse,
+                                                     private_key,
+                                                     contract,
+                                                     tx,
+                                                     index,
+                                                     hash_type,
+                                                     libbitcoin::chain::script::script_version::zero,
+                                                     amount)) {
+    std::cout << "Input sign failed" << std::endl;
+    return "Error";
   }
 
   return libbitcoin::encode_base16(endorse);

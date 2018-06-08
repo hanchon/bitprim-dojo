@@ -6,7 +6,7 @@
 #include "process_requests.hpp"
 
 namespace bitprim {
-using request_signature = std::string(*)(char *argv[]);
+using request_signature = std::string(*)(int argc, char *argv[]);
 using request_map = std::unordered_map<std::string, request_signature>;
 
 request_map load_request_map() {
@@ -40,7 +40,11 @@ request_map load_request_map() {
       {"getblocktemplate", process_getblocktemplate},
       {"getmininginfo", process_getmininginfo},
       {"submitblock", process_submitblock},
-      {"sendrawtransaction", process_sendrawtransaction}
+      {"sendrawtransaction", process_sendrawtransaction},
+      /*Transaction functions*/
+      {"create_txn", process_create_txn},
+      {"create_signature", process_create_signature},
+      {"set_input_script", process_set_input_script}
 
   };
 }
@@ -53,7 +57,7 @@ int main(int argc, char *argv[]) {
   auto it = functions.find(function);
 
   if (it != functions.end()) {
-    std::cout << it->second(argv) << std::endl;
+    std::cout << it->second(argc, argv) << std::endl;
   } else {
     std::cout << "Function not found." << std::endl;
   }
