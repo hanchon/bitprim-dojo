@@ -22,6 +22,7 @@ cd bitprim-dojo
 mkdir build
 cd build
 conan install ..
+cmake ..
 ```
 Two binaries can be built:
 * bitprim-dojo:
