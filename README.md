@@ -26,7 +26,7 @@ conan install ..
 Two binaries can be built:
 * bitprim-dojo:
 ```
-cmake --build ./ --target bitprim-cli -- -j 2
+cmake --build ./ --target bitprim-dojo -- -j 2
 ./bitprim-dojo
 ```
 * bitprim-cli:
