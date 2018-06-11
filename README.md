@@ -28,12 +28,12 @@ Two binaries can be built:
 * bitprim-dojo:
 ```
 cmake --build ./ --target bitprim-dojo -- -j 2
-./bitprim-dojo
+./bin/bitprim-dojo
 ```
 * bitprim-cli:
 ```
 cmake --build ./ --target bitprim-cli -- -j 2
-./bitprim-cli
+./bin/bitprim-cli
 ```
 
 # Usage examples
