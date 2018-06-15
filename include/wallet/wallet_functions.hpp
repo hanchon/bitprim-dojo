@@ -44,9 +44,11 @@ public:
   std::string priv_key_to_wif(libbitcoin::ec_secret const &priv_key,
                               bool mainnet = true, bool compress = false);
 
+#ifdef BITPRIM_CURRENCY_BCH
   // Creates a payment_address using a cashAddr string
   libbitcoin::wallet::payment_address
   cashAddr_to_payment_address(std::string const &address, bool mainnet = true);
+#endif
 
   //TODO: add method for mnemonics functions like mnemonic-new, mnemonic-to-seed, hd-new
 

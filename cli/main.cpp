@@ -17,7 +17,9 @@ request_map load_request_map() {
       {"seed_to_wif", process_seed_to_wif},
       {"seed_to_pub", process_seed_to_pub},
       {"seed_to_wallet", process_seed_to_wallet},
+#ifdef BITPRIM_CURRENCY_BCH
       {"seed_to_cashaddr", process_seed_to_cashaddr},
+#endif
       /* RPC functions */
       {"getinfo", process_getinfo},
       {"getrawtransaction", process_getrawtransaction},

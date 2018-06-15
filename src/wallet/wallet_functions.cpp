@@ -83,7 +83,7 @@ std::string bitprim_wallet::priv_key_to_wif(libbitcoin::ec_secret const &priv_ke
 
   return wif.encoded();
 }
-
+#ifdef BITPRIM_CURRENCY_BCH
 // Creates a payment_address using a cashAddr string
 libbitcoin::wallet::payment_address
 bitprim_wallet::cashAddr_to_payment_address(std::string const &address, bool mainnet /*= true*/) {
@@ -96,5 +96,6 @@ bitprim_wallet::cashAddr_to_payment_address(std::string const &address, bool mai
   const libbitcoin::wallet::payment_address new_address(address);
   return new_address;
 }
+#endif
 
 } // end namespace bitprim

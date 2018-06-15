@@ -91,6 +91,7 @@ std::string process_seed_to_wallet(int argc, char *argv[]) {
   return new_wallet.encoded();
 }
 
+#ifdef BITPRIM_CURRENCY_BCH
 std::string process_seed_to_cashaddr(int argc, char *argv[]) {
   // example: seed_to_cashaddr aaeb587496cc54912bbcef874fa9a61c true true
   // first bool parameter is compressed (compressed = true)
@@ -109,6 +110,7 @@ std::string process_seed_to_cashaddr(int argc, char *argv[]) {
   auto new_wallet = wallet_functions.pub_key_to_addr(pub_key, mainnet);
   return new_wallet.encoded_cashaddr();
 }
+#endif
 
 /************** RPC FUNCTIONS **************/
 std::string process_rpc_call(std::string method, std::string params) {

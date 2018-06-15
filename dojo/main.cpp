@@ -53,10 +53,13 @@ void generate_addrs() {
   auto new_wallet = wallet_functions.pub_key_to_addr(pub_key_comp, mainnet);
   std::cout << "Wallet Address (Mainnet):      " << new_wallet.encoded()
             << std::endl;
+#ifdef BITPRIM_CURRENCY_BCH
   std::cout << "Wallet cashAddress (Mainnet):  " << new_wallet.encoded_cashaddr()
             << std::endl
             << std::endl;
+#endif
 
+#ifdef BITPRIM_CURRENCY_BCH
   // Creates a payment_address using a cashAddr string
 
   std::string mainnet_address = new_wallet.encoded_cashaddr();
@@ -66,16 +69,20 @@ void generate_addrs() {
   std::cout << "Wallet cashAddress (Imported): " << new_wallet.encoded_cashaddr()
             << std::endl
             << std::endl;
+#endif
 
   // Creates a tesnet wallet using the public key.
   mainnet = false;
   new_wallet = wallet_functions.pub_key_to_addr(pub_key_comp, mainnet);
   std::cout << "Wallet Address (Testnet):      " << new_wallet.encoded()
             << std::endl;
+#ifdef BITPRIM_CURRENCY_BCH
   std::cout << "Wallet cashAddress (Testnet):  " << new_wallet.encoded_cashaddr()
             << std::endl
             << std::endl;
+#endif
 
+#ifdef BITPRIM_CURRENCY_BCH
   // Creates a payment_address using a cashAddr string
   std::string testnet_address = new_wallet.encoded_cashaddr();
   new_wallet = wallet_functions.cashAddr_to_payment_address(testnet_address, mainnet);
@@ -84,6 +91,7 @@ void generate_addrs() {
   std::cout << "Wallet cashAddress (Imported): " << new_wallet.encoded_cashaddr()
             << std::endl
             << std::endl;
+#endif
 
 }
 
