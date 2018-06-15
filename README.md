@@ -1,4 +1,5 @@
-# Bitprim dojo 
+# Bitprim dojo <a target="_blank" href="https://bintray.com/hanchon/hanchon/bitprim-dojo%3Ahanchon">![Bintray][badge.Bintray]</a> <a target="_blank" href="https://travis-ci.org/hanchon/bitprim-dojo">![Travis status][badge.Travis]</a>
+
 This is an example for educational purposes on how to use bitprim's code to solve the most common cryptocurrency use cases. It uses bitprim-core as a lib and also provides support for http requests in order to send RPC messages to a bitprim node.
 
 This project can generate two binaries files: 
@@ -117,3 +118,8 @@ mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG
 * [Bitprim-core](https://github.com/bitprim/bitprim-core) for the crypto-currency functions.
 * [Simple-web-server](https://github.com/eidheim/Simple-Web-Server) for the http requests.
 * Some clases imported in the utils files from [Libbitcoin-Explorer](https://github.com/libbitcoin/libbitcoin-explorer).
+
+
+<!-- Links -->
+[badge.Travis]: https://api.travis-ci.org/hanchon/bitprim-dojo.svg?branch=master
+[badge.Bintray]: https://api.bintray.com/packages/hanchon/hanchon/bitprim-dojo%3Ahanchon/images/download.svg?version=0.1.0%3Astable
