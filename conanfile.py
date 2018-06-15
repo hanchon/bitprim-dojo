@@ -22,34 +22,35 @@ from conans import ConanFile, CMake
 from conans import __version__ as conan_version
 from conans.model.version import Version
 
+def get_content(path):
+    with open(path, 'r') as f:
+        return f.read().replace('\n', '').replace('\r', '')
+
 def option_on_off(option):
     return "ON" if option else "OFF"
 
 class BitprimDojoConan(ConanFile):
     name = "bitprim-dojo"
-    version = "0.1.0"
+    version = get_content('conan_version')
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/hanchon/bitprim-dojo"
     description = "Bitcoin Dojo Example"
     settings = "os", "compiler", "build_type", "arch"
 
-    if conan_version < 1.1:
-        raise Exception ("Conan version should be greater or equal than 1.1")
+    if conan_version < Version("1.4"):
+        raise Exception ("Conan version should be greater or equal than 1.4")
 
-    options = {"shared": [True, False],
-               "fPIC": [True, False],
-               "with_tests": [True, False],
+    options = {"with_tests": [True, False],
                "currency": ['BCH', 'BTC', 'LTC'],
                "no_compilation": [True, False]
                }
 
-    default_options = "shared=False", \
-                      "fPIC=True", \
-                      "with_tests=False", \
+    default_options = "with_tests=False", \
                       "currency=BCH", \
                       "no_compilation=False"
 
     generators = "cmake"
+    exports = "conan_version", "conan_channel"
     exports_sources = "src/*", "CMakeLists.txt", "include/*", "cli/*", "bitprimbuildinfo.cmake", "dojo/*"
     build_policy = "missing"
 
@@ -63,6 +64,7 @@ class BitprimDojoConan(ConanFile):
             self.settings.remove("build_type")
 
         self.options["*"].currency = self.options.currency
+        self.options["bitprim-core"].shared = False
         self.output.info("Compiling for currency: %s" % (self.options.currency,))
 
     def package_id(self):
@@ -83,8 +85,6 @@ class BitprimDojoConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.verbose = False
-        cmake.definitions["USE_CONAN"] = option_on_off(True)
-        cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
         cmake.definitions["CURRENCY"] = self.options.currency
 
         if self.settings.compiler == "gcc":

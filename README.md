@@ -36,6 +36,19 @@ cmake --build ./ --target bitprim-cli -- -j 2
 ./bin/bitprim-cli
 ```
 
+# Build bitprim-cli using conan
+* Build bitprim-cli and store it in your conan cache:
+```
+git clone https://github.com/hanchon/bitprim-dojo
+cd bitprim-dojo
+conan create . bitprim-dojo/0.1.0@hanchon/stable -o *:currency=BCH
+```
+
+* Install bitprim-cli from your conan cache:
+```
+conan install bitprim-dojo/0.1.0@hanchon/stable -o *:currency=BCH
+```
+
 # Usage examples
 
 ## Create and sign a transaction (bitprim-cli)
