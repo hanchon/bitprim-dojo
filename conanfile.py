@@ -25,9 +25,9 @@ from conans.model.version import Version
 def option_on_off(option):
     return "ON" if option else "OFF"
 
-class BitprimNetworkConan(ConanFile):
+class BitprimDojoConan(ConanFile):
     name = "bitprim-dojo"
-    version = 0.1
+    version = "0.1.0"
     license = "http://www.boost.org/users/license.html"
     url = "https://github.com/hanchon/bitprim-dojo"
     description = "Bitcoin Dojo Example"
@@ -39,69 +39,53 @@ class BitprimNetworkConan(ConanFile):
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "with_tests": [True, False],
-               "currency": ['BCH', 'BTC', 'LTC']
+               "currency": ['BCH', 'BTC', 'LTC'],
+               "no_compilation": [True, False]
                }
 
     default_options = "shared=False", \
                       "fPIC=True", \
                       "with_tests=False", \
-                      "currency=BCH"
+                      "currency=BCH", \
+                      "no_compilation=False"
 
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "cmake/*", "include/*"
-    # package_files = "build/lbitprim-network.a"
+    exports_sources = "src/*", "CMakeLists.txt", "include/*", "cli/*", "bitprimbuildinfo.cmake", "dojo/*"
     build_policy = "missing"
 
-    requires = (("bitprim-core/0.11.0@bitprim/testing"))
+    def requirements(self):
+        if not self.options.no_compilation and self.settings.get_safe("compiler") is not None:
+            self.requires("bitprim-core/0.11.0@bitprim/testing")
 
-    @property
-    def msvc_mt_build(self):
-        return "MT" in str(self.settings.compiler.runtime)
+    def configure(self):
+        if self.options.no_compilation or (self.settings.compiler == None and self.settings.arch == 'x86_64' and self.settings.os in ('Linux', 'Windows', 'Macos')):
+            self.settings.remove("compiler")
+            self.settings.remove("build_type")
 
-    @property
-    def fPIC_enabled(self):
-        if self.settings.compiler == "Visual Studio":
-            return False
-        else:
-            return self.options.fPIC
-
-    @property
-    def is_shared(self):
-        if self.options.shared and self.msvc_mt_build:
-            return False
-        else:
-            return self.options.shared
-
-    def config_options(self):
-        self.output.info('def config_options(self):')
-        if self.settings.compiler == "Visual Studio":
-            self.options.remove("fPIC")
-
-            if self.options.shared and self.msvc_mt_build:
-                self.options.remove("shared")
+        self.options["*"].currency = self.options.currency
+        self.output.info("Compiling for currency: %s" % (self.options.currency,))
 
     def package_id(self):
-        self.info.options.with_tests = "ANY"
-
+        self.info.requires.clear()
+        self.info.settings.compiler = "ANY"
+        self.info.settings.build_type = "ANY"
+        self.info.options.no_compilation = "ANY"
         #For Bitprim Packages libstdc++ and libstdc++11 are the same
         if self.settings.compiler == "gcc" or self.settings.compiler == "clang":
             if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
                 self.info.settings.compiler.libcxx = "ANY"
 
+    def deploy(self):
+        self.copy("bitprim-cli.exe", src="bin")
+        self.copy("bitprim-cli", src="bin")
+
+
     def build(self):
         cmake = CMake(self)
         cmake.verbose = False
-
-        cmake.definitions["ENABLE_SHARED"] = option_on_off(self.is_shared)
-        cmake.definitions["ENABLE_POSITION_INDEPENDENT_CODE"] = option_on_off(self.fPIC_enabled)
-
+        cmake.definitions["USE_CONAN"] = option_on_off(True)
+        cmake.definitions["NO_CONAN_AT_ALL"] = option_on_off(False)
         cmake.definitions["CURRENCY"] = self.options.currency
-
-        if self.settings.compiler != "Visual Studio":
-            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " -Wno-deprecated-declarations"
-
-        if self.settings.compiler == "Visual Studio":
-            cmake.definitions["CONAN_CXX_FLAGS"] = cmake.definitions.get("CONAN_CXX_FLAGS", "") + " /DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE"
 
         if self.settings.compiler == "gcc":
             if float(str(self.settings.compiler.version)) >= 5:
@@ -115,19 +99,6 @@ class BitprimNetworkConan(ConanFile):
         cmake.configure(source_dir=self.source_folder)
         cmake.build()
 
-    def imports(self):
-        self.copy("*.h", "", "include")
-
     def package(self):
-        self.copy("*.h", dst="include", src="include")
-        self.copy("*.hpp", dst="include", src="include")
-        self.copy("*.ipp", dst="include", src="include")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.dylib*", dst="lib", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
-
-    def package_info(self):
-        self.cpp_info.includedirs = ['include']
-        self.cpp_info.libs = ["bitprim-dojo"]
+        self.copy("bitprim-cli.exe", dst="bin", src="bin") # Windows
+        self.copy("bitprim-cli", dst="bin", src="bin") # Linux / Macos
