@@ -1,4 +1,4 @@
-# Bitprim dojo <a target="_blank" href="https://bintray.com/hanchon/hanchon/bitprim-dojo%3Ahanchon">![Bintray][badge.Bintray]</a> <a target="_blank" href="https://travis-ci.org/hanchon/bitprim-dojo">![Travis status][badge.Travis]</a>
+# Bitprim dojo <a target="_blank" href="https://bintray.com/hanchon/hanchon/bitprim-dojo%3Ahanchon">![Bintray][badge.Bintray]</a> <a target="_blank" href="https://travis-ci.org/hanchon/bitprim-dojo">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/projects/hanchon/bitprim-dojo">![Appveyor Status][badge.Appveyor]
 
 This is an example for educational purposes on how to use bitprim's code to solve the most common cryptocurrency use cases. It uses bitprim-core as a lib and also provides support for http requests in order to send RPC messages to a bitprim node.
 
@@ -123,3 +123,4 @@ mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG
 <!-- Links -->
 [badge.Travis]: https://api.travis-ci.org/hanchon/bitprim-dojo.svg?branch=master
 [badge.Bintray]: https://api.bintray.com/packages/hanchon/hanchon/bitprim-dojo%3Ahanchon/images/download.svg?version=0.1.0%3Astable
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/hanchon/bitprim-dojo?svg=true&branch=master
