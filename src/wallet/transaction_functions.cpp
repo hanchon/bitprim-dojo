@@ -69,10 +69,17 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
 
   //// Experimental use of OP_RETURN
   if (message != "") {
+    // Header is 64917461 = "data"
+    libbitcoin::data_chunk header;
+    libbitcoin::decode_base16(header,"64617461");
     libbitcoin::data_chunk encoded_message;
     libbitcoin::decode_base16(encoded_message, message);
-    //TODO: calculate the message's size and add that op_code before the message
-    libbitcoin::machine::operation::list op_codes = {{libbitcoin::machine::opcode::return_}, {encoded_message}};
+    // Note: Adding an op_code using {data_chunk} automatically adds the size on front of the message
+    libbitcoin::machine::operation::list op_codes = {
+        {libbitcoin::machine::opcode::return_},
+        {header},
+        {encoded_message}
+    };
     tx.outputs().push_back({0, op_codes});
   }
 

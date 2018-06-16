@@ -216,9 +216,10 @@ std::string process_sendrawtransaction(int argc, char *argv[]) {
 
 /************** TRANSACTION FUNCTIONS **************/
 std::string process_create_txn(int argc, char *argv[]) {
-  // example: create_txn -i "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393:1" -o "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:199999000"
+  // example: create_txn -i "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393:1" -o "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:199999000" -m ""
   std::vector<std::string> inputs;
   std::vector<std::string> outputs;
+  std::string message = "";
 
   // Parse values
   for (int i = 1; i < argc; ++i) {
@@ -228,20 +229,24 @@ std::string process_create_txn(int argc, char *argv[]) {
       } else {
         return "Error, inputs requires one argument";
       }
-    } else {
-      if (std::string(argv[i]) == "-o") {
-        if (i + 1 < argc) {
-          outputs = comma_delimited_to_array(argv[++i]);
-        } else {
-          return "Error, outputs requires one argument";
-        }
+    } else if (std::string(argv[i]) == "-o") {
+      if (i + 1 < argc) {
+        outputs = comma_delimited_to_array(argv[++i]);
+      } else {
+        return "Error, outputs requires one argument";
+      }
+    } else if (std::string(argv[i]) == "-m") {
+      if (i + 1 < argc) {
+        message = argv[++i];
+      } else {
+        return "Error, message requires one argument";
       }
     }
   }
 
   // Create txn
   bitprim::bitprim_transaction transaction;
-  return transaction.tx_encode(inputs, outputs);
+  return transaction.tx_encode(inputs, outputs, message);
 }
 
 std::string process_create_signature(int argc, char *argv[]) {
