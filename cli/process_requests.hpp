@@ -352,6 +352,11 @@ std::string process_set_input_script(int argc, char *argv[]) {
   return transaction.input_set(signature, pub_key.encoded(), txn);
 }
 
+std::string process_new_seed(int argc, char *argv[]) {
+  bitprim::bitprim_wallet wallet_functions;
+  return wallet_functions.new_seed();
+}
+
 }// end namespace bitprim
 
 #endif //BITPRIM_DOJO_PROCESS_REQUESTS_HPP

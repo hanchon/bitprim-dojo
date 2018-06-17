@@ -3,6 +3,8 @@
 //
 
 #include <wallet/wallet_functions.hpp>
+#include <bitcoin/bitcoin.hpp>
+#include <utils/utility.hpp>
 
 namespace bitprim {
 
@@ -97,5 +99,11 @@ bitprim_wallet::cashAddr_to_payment_address(std::string const &address, bool mai
   return new_address;
 }
 #endif
+
+// WARNING: Pseudorandom seeding can introduce cryptographic weakness into your keys.
+// This command is provided as a convenience.
+std::string bitprim_wallet::new_seed() {
+  return libbitcoin::encode_base16(libbitcoin::explorer::new_seed(192));
+}
 
 } // end namespace bitprim

@@ -50,6 +50,10 @@ public:
   cashAddr_to_payment_address(std::string const &address, bool mainnet = true);
 #endif
 
+  // WARNING: Pseudorandom seeding can introduce cryptographic weakness into your keys.
+  // This command is provided as a convenience.
+  std::string new_seed();
+
   //TODO: add method for mnemonics functions like mnemonic-new, mnemonic-to-seed, hd-new
 
 };

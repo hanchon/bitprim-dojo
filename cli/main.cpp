@@ -46,7 +46,10 @@ request_map load_request_map() {
       /*Transaction functions*/
       {"create_txn", process_create_txn},
       {"create_signature", process_create_signature},
-      {"set_input_script", process_set_input_script}
+      {"set_input_script", process_set_input_script},
+      // WARNING: Pseudorandom seeding can introduce cryptographic weakness into your keys.
+      // This command is provided as a convenience.
+      {"new_seed", process_new_seed}
 
   };
 }

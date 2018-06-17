@@ -179,7 +179,13 @@ ec_secret new_key(const data_chunk &seed);
  * @param[in]  seed  The seed length in bits. Will be aligned to nearest byte.
  * @return           The new key.
  */
-data_chunk new_seed(size_t bit_length = minimum_seed_bits);
+inline
+data_chunk new_seed(size_t bit_length = minimum_seed_bits) {
+  size_t fill_seed_size = bit_length / byte_bits;
+  data_chunk seed(fill_seed_size);
+  pseudo_random_fill(seed);
+  return seed;
+};
 
 /**
  * Convert a list of indexes to a list of strings. This could be generalized.
