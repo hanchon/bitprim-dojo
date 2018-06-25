@@ -1,10 +1,11 @@
 pipeline {
   agent {
-    docker {
-      image 'ubuntu:18.10'
-      args '-u 0:0'
+    node('Bitprim_Slave') {
+      docker {
+        image 'ubuntu:18.10'
+        args '-u 0:0'
+      }
     }
-
   }
   stages {
     stage('Init') {
