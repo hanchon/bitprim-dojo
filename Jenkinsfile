@@ -1,9 +1,20 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'gcc:5'
+    }
+
+  }
   stages {
+    stage('Init') {
+      steps {
+        sh '''echo PATH = ${PATH}
+'''
+      }
+    }
     stage('Build') {
       steps {
-        echo 'Here we should build'
+        sh 'ls'
       }
     }
   }
