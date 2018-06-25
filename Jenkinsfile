@@ -1,12 +1,10 @@
-pipeline {
+pipeline ('Bitprim_Slave') {
   agent {
       docker {
         image 'ubuntu:18.10'
         inside '-u root'
       }
     }
-node('Bitprim_Slave') {
-
   stages {
     stage('Init') {
       steps {
@@ -36,5 +34,4 @@ cmake --build ./ --target bitprim-cli -- -j 2'''
       }
     }
   }
-}
 }
