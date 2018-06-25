@@ -10,6 +10,8 @@ pipeline {
       steps {
         sh '''echo PATH = ${PATH}
 echo $HOSTNAME
+whoami
+echo whoami
 
 apt-get update
 apt-get install build-essential -y
