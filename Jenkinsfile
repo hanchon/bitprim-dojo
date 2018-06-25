@@ -7,8 +7,10 @@ pipeline {
   }
   stages {
     stage('Init') {
-      steps {
-        sh '''echo PATH = ${PATH}
+      parallel {
+        stage('Init') {
+          steps {
+            sh '''echo PATH = ${PATH}
 echo $HOSTNAME
 whoami
 docker --version
@@ -25,6 +27,29 @@ apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
 pip install conan'''
+          }
+        }
+        stage('Init2') {
+          steps {
+            sh '''echo PATH = ${PATH}
+echo $HOSTNAME
+whoami
+docker --version
+
+docker run ubuntu
+echo $HOSTNAME
+echo PATH
+whoami
+
+apt-get update
+apt-get install build-essential -y
+apt-get install gcc
+apt-get install cmake -y
+apt-get install python -y
+apt-get install python-pip -y
+pip install conan'''
+          }
+        }
       }
     }
     stage('Build') {
