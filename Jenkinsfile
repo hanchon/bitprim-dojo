@@ -9,6 +9,7 @@ pipeline {
     stage('Init') {
       steps {
         sh '''echo PATH = ${PATH}
+echo $HOSTNAME
 
 apt-get update
 apt-get install build-essential -y
