@@ -1,23 +1,16 @@
 pipeline {
   agent {
-    node {
-      label 'Bitprim_Slave'
+    docker {
+      image 'ubuntu:18.10'
+      args '-u root'
     }
 
   }
   stages {
     stage('Init') {
-      parallel {
-        stage('Init') {
-          steps {
-            sh '''echo PATH = ${PATH}
+      steps {
+        sh '''echo PATH = ${PATH}
 echo $HOSTNAME
-whoami
-docker --version
-
-docker run -i ubuntu
-echo $HOSTNAME
-echo PATH
 whoami
 
 apt-get update
@@ -26,30 +19,8 @@ apt-get install gcc
 apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
-pip install conan'''
-          }
-        }
-        stage('Init2') {
-          steps {
-            sh '''echo PATH = ${PATH}
-echo $HOSTNAME
-whoami
-docker --version
-
-docker run -i ubuntu
-echo $HOSTNAME
-echo $PATH
-whoami
-
-apt-get update
-apt-get install build-essential -y
-apt-get install gcc
-apt-get install cmake -y
-apt-get install python -y
-apt-get install python-pip -y
-pip install conan'''
-          }
-        }
+pip install conan
+conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
       }
     }
     stage('Build') {
