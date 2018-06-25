@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'ubuntu:18.10'
-      args '\'-u 0:0\''
+      args '-u 0:0'
     }
 
   }
