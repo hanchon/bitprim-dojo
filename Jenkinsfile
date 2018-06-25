@@ -10,13 +10,13 @@ pipeline {
       steps {
         sh '''echo PATH = ${PATH}
 
-sudo apt-get update
-sudo apt-get install build-essential -y
-sudo apt-get install gcc
-sudo apt-get install cmake -y
-sudo apt-get install python -y
-sudo apt-get install python-pip -y
-sudo pip install conan'''
+apt-get update
+apt-get install build-essential -y
+apt-get install gcc
+apt-get install cmake -y
+apt-get install python -y
+apt-get install python-pip -y
+pip install conan'''
       }
     }
     stage('Build') {
