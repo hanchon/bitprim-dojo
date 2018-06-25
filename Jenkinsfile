@@ -13,7 +13,10 @@ echo $HOSTNAME
 whoami
 docker --version
 
-docker run -it ubuntu
+docker run ubuntu
+echo $HOSTNAME
+echo PATH
+whoami
 
 apt-get update
 apt-get install build-essential -y
