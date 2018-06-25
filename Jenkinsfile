@@ -1,5 +1,5 @@
-node('Bitprim_Slave') {
 pipeline {
+node('Bitprim_Slave') {
   agent {
       docker {
         image 'ubuntu:18.10'
