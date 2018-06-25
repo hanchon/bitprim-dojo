@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'gcc:5'
+      image 'ubuntu:18.10'
     }
 
   }
@@ -12,6 +12,7 @@ pipeline {
 
 sudo apt-get update
 sudo apt-get install build-essential -y
+sudo apt-get install gcc
 sudo apt-get install cmake -y
 sudo apt-get install python -y
 sudo apt-get install python-pip -y
