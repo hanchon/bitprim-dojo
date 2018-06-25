@@ -1,10 +1,10 @@
-pipeline  {
+pipeline {
   agent {
-      docker {
-        image 'ubuntu:18.10'
-        label 'Bitprim_Slave'
-      }
+    node {
+      label 'Bitprim_Slave'
     }
+
+  }
   stages {
     stage('Init') {
       steps {
