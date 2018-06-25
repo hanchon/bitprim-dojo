@@ -11,7 +11,9 @@ pipeline {
         sh '''echo PATH = ${PATH}
 echo $HOSTNAME
 whoami
-echo whoami
+docker --version
+
+docker run ubuntu
 
 apt-get update
 apt-get install build-essential -y
