@@ -36,9 +36,9 @@ echo $HOSTNAME
 whoami
 docker --version
 
-docker run ubuntu
+docker run -i ubuntu
 echo $HOSTNAME
-echo PATH
+echo $PATH
 whoami
 
 apt-get update
