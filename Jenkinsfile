@@ -2,7 +2,8 @@ pipeline {
   agent {
     docker {
       image 'ubuntu:18.10'
-      args '-u root'
+      args '''-u root -v /var/run/docker.sock:/var/run/docker.sock
+-v $PWD/blueocean_home:/var/jenkins_home'''
     }
 
   }
