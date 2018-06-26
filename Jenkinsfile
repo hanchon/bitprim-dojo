@@ -71,5 +71,11 @@ build/bin/bitprim-cli create_txn -i "980de6ce12c29698d54323c6b0f358e1a9ae867598b
 #docker rm -f id'''
       }
     }
+    stage('Finish') {
+      steps {
+        input 'Do you want to send an slack message?'
+        echo 'Le dieron al OK'
+      }
+    }
   }
 }
