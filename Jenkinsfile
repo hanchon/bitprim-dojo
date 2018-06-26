@@ -23,7 +23,7 @@ apt-get install gcc
 apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
-pip install conan
+pip install conan --upgrade
 #conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
       }
     }
