@@ -2,9 +2,7 @@ pipeline {
   agent {
     docker {
       image 'ubuntu:18.10'
-      label 'Bitprim_Slave'
-      args '''-u root -v /var/run/docker.sock:/var/run/docker.sock -v
-/usr/bin/docker:/usr/bin/docker:ro'''
+      args '-u root'
     }
 
   }
