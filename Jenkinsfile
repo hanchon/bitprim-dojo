@@ -1,8 +1,7 @@
 pipeline {
   agent {
-    docker {
-      image 'ubuntu:18.10'
-      args '-u root'
+    node {
+      label 'Bitprim_Slave'
     }
 
   }
@@ -10,6 +9,11 @@ pipeline {
     stage('Init') {
       steps {
         sh '''echo PATH = ${PATH}
+echo $HOSTNAME
+whoami
+
+docker run -t -d -u root ubuntu:18.10 cat
+echo PATH = ${PATH}
 echo $HOSTNAME
 whoami
 
