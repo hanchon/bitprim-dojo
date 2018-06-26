@@ -15,8 +15,8 @@ whoami
 #docker run -t -d -u root ubuntu:18.10 cat
 #EXAMPLE:
 #docker create --name cxx-devel \\
-    -v $HOME/src:/srv/src:ro -v $HOME/build:/srv/build \\
-    gsauthof/fedora-cxx-devel:23
+#    -v $HOME/src:/srv/src:ro -v $HOME/build:/srv/build \\
+#    gsauthof/fedora-cxx-devel:23
 #docker start cxx-devel     # <- entrypoint is /usr/bin/sleep infinity
 #docker exec cxx-devel /srv/src/projecta/build.sh
 #docker exec cxx-devel /srv/src/projecta/check.sh
