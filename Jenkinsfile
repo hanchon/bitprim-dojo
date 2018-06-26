@@ -12,10 +12,10 @@ pipeline {
 echo $HOSTNAME
 whoami
 
-docker run -t -d -u root ubuntu:18.10 cat
-echo PATH = ${PATH}
-echo $HOSTNAME
-whoami
+#docker run -t -d -u root ubuntu:18.10 cat
+#echo PATH = ${PATH}
+#echo $HOSTNAME
+#whoami
 
 apt-get update
 apt-get install build-essential -y
@@ -24,7 +24,7 @@ apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
 pip install conan
-conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
+#conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
       }
     }
     stage('Build') {
