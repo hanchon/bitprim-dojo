@@ -32,7 +32,7 @@ conan install ..
 cmake ..
 cmake --build ./ --target bitprim-dojo -- -j 2
 cmake --build ./ --target bitprim-cli -- -j 2'''
-        archiveArtifacts './bin/*'
+        archiveArtifacts 'build/bin/*'
       }
     }
     stage('Run Create Addr') {
