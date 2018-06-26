@@ -32,6 +32,21 @@ conan install ..
 cmake ..
 cmake --build ./ --target bitprim-dojo -- -j 2
 cmake --build ./ --target bitprim-cli -- -j 2'''
+        archiveArtifacts './bin/*'
+      }
+    }
+    stage('Run Create Addr') {
+      parallel {
+        stage('Run Create Addr') {
+          steps {
+            sh './bin/bitprim-cli seed_to_wallet fffb587496cc54912bbcef874fa9a61a true false'
+          }
+        }
+        stage('Run Create Txn') {
+          steps {
+            sh './bin/bitprim-cli create_txn -i "980de6ce12c29698d54323c6b0f358e1a9ae867598b840ee0094b9df22b07393:1" -o "mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG:199999000"'
+          }
+        }
       }
     }
   }
