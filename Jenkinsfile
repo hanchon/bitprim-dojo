@@ -1,7 +1,9 @@
 pipeline {
   agent {
-    node {
+    docker {
+      image 'ubuntu:18.10'
       label 'Bitprim_Slave'
+      args '-u root'
     }
 
   }
