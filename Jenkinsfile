@@ -4,7 +4,7 @@ pipeline {
       label 'Bitprim_Slave'
       image 'ubuntu:18.10'
       args '''-u root -v /var/run/docker.sock:/var/run/docker.sock
--v $PWD/blueocean_home:/var/jenkins_home'''
+-v jenkins_build:/var/jenkins_home'''
     }
 
   }
