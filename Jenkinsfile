@@ -24,8 +24,7 @@ conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
     }
     stage('Build') {
       steps {
-        sh '''env.BRANCH_NAME
-printenv
+        sh '''git branch
 
 mkdir build
 cd build
