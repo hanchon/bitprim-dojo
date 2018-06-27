@@ -14,8 +14,8 @@ pipeline {
         sh '''#Install Requirements on Ubuntu18.10 docker image
 apt-get update
 apt-get install build-essential -y
-apt-get install gcc
-apt-get install git
+apt-get install gcc -y
+apt-get install git -y
 apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
