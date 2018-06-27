@@ -24,7 +24,9 @@ conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
     }
     stage('Build') {
       steps {
-        sh '''mkdir build
+        sh '''sh \'printenv\'
+
+mkdir build
 cd build
 conan install ..
 cmake ..
