@@ -20,14 +20,14 @@ apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
 pip install conan --upgrade
-conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim'''
+conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
+
+git rev-parse --abbrev-ref HEAD'''
       }
     }
     stage('Build') {
       steps {
-        sh '''git branch
-
-mkdir build
+        sh '''mkdir build
 cd build
 conan install ..
 cmake ..
