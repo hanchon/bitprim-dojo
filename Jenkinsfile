@@ -15,6 +15,7 @@ pipeline {
 apt-get update
 apt-get install build-essential -y
 apt-get install gcc
+apt-get install git
 apt-get install cmake -y
 apt-get install python -y
 apt-get install python-pip -y
