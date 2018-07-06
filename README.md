@@ -18,9 +18,9 @@ conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
 
 # Download the binary files from bintray
 * Currency can be set to:
- * BCH
- * BTC
- * LTC
+  * BCH
+  * BTC
+  * LTC
 ```
 conan install bitprim-dojo/0.1.1@hanchon/stable -o *:currency=BCH
 ```
