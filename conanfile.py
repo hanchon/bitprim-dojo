@@ -88,14 +88,15 @@ class BitprimDojoConan(ConanFile):
         cmake.verbose = False
         cmake.definitions["CURRENCY"] = self.options.currency
 
-        if self.settings.compiler == "gcc":
-            if float(str(self.settings.compiler.version)) >= 5:
-                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
-            else:
-                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
-        elif self.settings.compiler == "clang":
-            if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
-                cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
+        if self.settings.get_safe("compiler") is not None:
+            if self.settings.compiler == "gcc":
+                if float(str(self.settings.compiler.version)) >= 5:
+                    cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
+                else:
+                    cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(True)
+            elif self.settings.compiler == "clang":
+                if str(self.settings.compiler.libcxx) == "libstdc++" or str(self.settings.compiler.libcxx) == "libstdc++11":
+                    cmake.definitions["NOT_USE_CPP11_ABI"] = option_on_off(False)
 
         cmake.configure(source_dir=self.source_folder)
         cmake.build()
