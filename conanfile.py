@@ -80,7 +80,8 @@ class BitprimDojoConan(ConanFile):
     def deploy(self):
         self.copy("bitprim-cli.exe", src="bin")
         self.copy("bitprim-cli", src="bin")
-
+        self.copy("bitprim-dojo.exe", src="bin")
+        self.copy("bitprim-dojo", src="bin")
 
     def build(self):
         cmake = CMake(self)
@@ -102,3 +103,5 @@ class BitprimDojoConan(ConanFile):
     def package(self):
         self.copy("bitprim-cli.exe", dst="bin", src="bin") # Windows
         self.copy("bitprim-cli", dst="bin", src="bin") # Linux / Macos
+        self.copy("bitprim-dojo.exe", dst="bin", src="bin") # Windows
+        self.copy("bitprim-dojo", dst="bin", src="bin") # Linux / Macos

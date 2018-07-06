@@ -10,13 +10,39 @@ This project can generate two binaries files:
 
 * A C++11 compiler, currently minimum [GCC 4.8.0](https://gcc.gnu.org/projects/cxx0x.html) or Clang based on [LLVM 3.5](http://llvm.org/releases/3.5.0/docs/ReleaseNotes.html).
 * [CMake](https://cmake.org/) minimum 3.7
-* [Conan](https://conan.io/) minimum 1.2.3. [Conan installation guide](http://docs.conan.io/en/latest/installation.html) (Conan itself requires Python, Pip and CMake)
+* [Conan](https://conan.io/) minimum 1.4.0. [Conan installation guide](http://docs.conan.io/en/latest/installation.html) (Conan itself requires Python, Pip and CMake)
 * Add the Bitprim's Conan Remote
  ```
 conan remote add bitprim https://api.bintray.com/conan/bitprim/bitprim
 ```
 
-# Build and run:
+# Download the binary files from bintray
+* Currency can be set to:
+ * BCH
+ * BTC
+ * LTC
+```
+conan install bitprim-dojo/0.1.1@hanchon/stable -o *:currency=BCH
+```
+
+# Build locally using conan create (Windows/Linux/OSX):
+Build the binary files using conan create, this step will generate the binary files and save them to your local conan cache folder.
+```
+git clone https://github.com/hanchon/bitprim-dojo
+cd bitprim-dojo
+conan create . bitprim-dojo/0.1.1@hanchon/stable -o *:currency=BCH
+```
+
+# Run (Windows/Linux/OSX):
+Install the binary files the previous step builds (it'll get the files from your local conan cache)
+```
+mkdir bin
+cd bin
+conan install bitprim-dojo/0.1.1@hanchon/stable -o *:currency=BCH
+```
+The biptirm-dojo and bitprim-cli files will be in the bin folder.
+
+# Build and run (Debian):
 ```
 git clone https://github.com/hanchon/bitprim-dojo
 cd bitprim-dojo
@@ -35,19 +61,6 @@ cmake --build ./ --target bitprim-dojo -- -j 2
 ```
 cmake --build ./ --target bitprim-cli -- -j 2
 ./bin/bitprim-cli
-```
-
-# Build bitprim-cli using conan
-* Build bitprim-cli and store it in your conan cache:
-```
-git clone https://github.com/hanchon/bitprim-dojo
-cd bitprim-dojo
-conan create . bitprim-dojo/0.1.0@hanchon/stable -o *:currency=BCH
-```
-
-* Install bitprim-cli from your conan cache:
-```
-conan install bitprim-dojo/0.1.0@hanchon/stable -o *:currency=BCH
 ```
 
 # Usage examples
@@ -122,5 +135,5 @@ mwx2YDHgpdfHUmCpFjEi9LarXf7EkQN6YG
 
 <!-- Links -->
 [badge.Travis]: https://api.travis-ci.org/hanchon/bitprim-dojo.svg?branch=master
-[badge.Bintray]: https://api.bintray.com/packages/hanchon/hanchon/bitprim-dojo%3Ahanchon/images/download.svg?version=0.1.0%3Astable
+[badge.Bintray]: https://api.bintray.com/packages/hanchon/hanchon/bitprim-dojo%3Ahanchon/images/download.svg?version=0.1.1%3Astable
 [badge.Appveyor]: https://ci.appveyor.com/api/projects/status/github/hanchon/bitprim-dojo?svg=true&branch=master
