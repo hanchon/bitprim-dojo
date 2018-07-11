@@ -4,16 +4,10 @@
 
 #include <wallet/transaction_functions.hpp>
 #include <bitcoin/bitcoin.hpp>
-#include <utils/output.hpp>
-#include <utils/input.hpp>
-#include <utils/transaction.hpp>
-#include <utils/script.hpp>
-#include <utils/ec_private.hpp>
-#include <utils/endorsement.hpp>
 
 namespace bitprim {
 static bool push_scripts(std::vector<libbitcoin::chain::output> &outputs,
-                         const libbitcoin::explorer::config::output &output, uint8_t script_version) {
+                         const libbitcoin::config::output &output, uint8_t script_version) {
   static constexpr uint64_t no_amount = 0;
 
   // explicit script
@@ -57,11 +51,11 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
   tx.set_locktime(locktime);
 
   for (const auto &input: output_to_spend) {
-    tx.inputs().push_back(libbitcoin::explorer::config::input(input));
+    tx.inputs().push_back(libbitcoin::config::input(input));
   }
 
   for (const auto &output: destiny) {
-    if (!push_scripts(tx.outputs(), libbitcoin::explorer::config::output(output), script_version)) {
+    if (!push_scripts(tx.outputs(), libbitcoin::config::output(output), script_version)) {
       std::cout << "Invalid output" << std::endl;
       return "Error";
     }
@@ -88,7 +82,7 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
     return "Error";
   }
 
-  libbitcoin::explorer::config::transaction res(tx);
+  libbitcoin::config::transaction res(tx);
 
   std::stringstream buffer;
   buffer << res;
@@ -105,13 +99,13 @@ std::string bitprim_transaction::input_signature_old(const std::string &raw_priv
   // TODO:: the sign_type should be a parameter
   auto sign_type = 0x01; //all
 
-  const libbitcoin::explorer::config::transaction temp_tx(raw_tx);
+  const libbitcoin::config::transaction temp_tx(raw_tx);
   const libbitcoin::chain::transaction tx(temp_tx);
 
-  const libbitcoin::explorer::config::ec_private temp_priv(raw_private_key);
+  const libbitcoin::config::ec_private temp_priv(raw_private_key);
   const libbitcoin::ec_secret &private_key(temp_priv);
 
-  const libbitcoin::explorer::config::script &temp_contract(raw_output_script);
+  const libbitcoin::config::script &temp_contract(raw_output_script);
   const libbitcoin::chain::script &contract(temp_contract);
 
   if (index >= tx.inputs().size()) {
@@ -148,13 +142,13 @@ std::string bitprim_transaction::input_signature(const std::string &raw_private_
     sign_type |= 0x40;
   }
 
-  const libbitcoin::explorer::config::transaction temp_tx(raw_tx);
+  const libbitcoin::config::transaction temp_tx(raw_tx);
   const libbitcoin::chain::transaction tx(temp_tx);
 
-  const libbitcoin::explorer::config::ec_private temp_priv(raw_private_key);
+  const libbitcoin::config::ec_private temp_priv(raw_private_key);
   const libbitcoin::ec_secret &private_key(temp_priv);
 
-  const libbitcoin::explorer::config::script &temp_contract(raw_output_script);
+  const libbitcoin::config::script &temp_contract(raw_output_script);
   const libbitcoin::chain::script &contract(temp_contract);
 
   if (index >= tx.inputs().size()) {
@@ -191,11 +185,11 @@ std::string bitprim_transaction::input_set(const std::string &signature,
   // Bound parameters.
   // TODO: index should be a parameter to set the value when inputs != 0
   const auto index = 0;
-  const auto &tx_in = libbitcoin::explorer::config::transaction(raw_tx);
-  const auto &script = libbitcoin::explorer::config::script("[" + signature + "] [" + public_key + "]");
+  const auto &tx_in = libbitcoin::config::transaction(raw_tx);
+  const auto &script = libbitcoin::config::script("[" + signature + "] [" + public_key + "]");
 
   // Clone so we keep arguments const.
-  auto tx_copy = libbitcoin::explorer::config::transaction(tx_in);
+  auto tx_copy = libbitcoin::config::transaction(tx_in);
   auto &tx_out = tx_copy.data();
 
   if (index >= tx_out.inputs().size()) {

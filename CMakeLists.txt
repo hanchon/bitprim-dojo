@@ -34,16 +34,7 @@ endif ()
 set (SRC_FILES
         src/wallet/wallet_functions.cpp
         src/simple_web_client/requester.cpp
-        src/wallet/transaction_functions.cpp
-        include/utils/utility.ipp
-        src/utils/output.cpp
-        src/utils/script.cpp
-        src/utils/encoding.cpp
-        src/utils/input.cpp
-        src/utils/transaction.cpp
-        src/utils/point.cpp
-        src/utils/ec_private.cpp
-        src/utils/endorsement.cpp)
+        src/wallet/transaction_functions.cpp)
 
 
 # BIPTIRM EXAMPLE EXE/INCLUDES/LIBS.
