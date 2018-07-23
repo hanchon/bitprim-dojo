@@ -69,9 +69,10 @@ std::string bitprim_transaction::tx_encode(const std::vector<std::string> &outpu
 
   //// Experimental use of OP_RETURN
   if (message != "") {
-    // Header is 64917461 = "data"
+
+    // Header is 00004b50 = "  KP"
     libbitcoin::data_chunk header;
-    libbitcoin::decode_base16(header,"64617461");
+    libbitcoin::decode_base16(header,"00004b50");
     libbitcoin::data_chunk encoded_message;
     libbitcoin::decode_base16(encoded_message, message);
     // Note: Adding an op_code using {data_chunk} automatically adds the size on front of the message
