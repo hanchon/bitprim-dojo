@@ -56,7 +56,7 @@ class BitprimDojoConan(ConanFile):
 
     def requirements(self):
         if not self.options.no_compilation and self.settings.get_safe("compiler") is not None:
-            self.requires("bitprim-core/0.12.0@bitprim/testing")
+            self.requires("bitprim-core/0.13.0@bitprim/testing")
 
     def configure(self):
         if self.options.no_compilation or (self.settings.compiler == None and self.settings.arch == 'x86_64' and self.settings.os in ('Linux', 'Windows', 'Macos')):

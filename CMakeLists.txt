@@ -83,3 +83,22 @@ target_include_directories(bitprim-cli PUBLIC
 # Libraries.
 #==============================================================================
 target_link_libraries(bitprim-cli PUBLIC ${CONAN_LIBS})
+
+
+# BIPTIRM API EXE/INCLUDES/LIBS.
+#==============================================================================
+
+# Executable files.
+#==============================================================================
+add_executable(bitprim-api api/main.cpp
+        ${SRC_FILES})
+
+# Includes.
+#==============================================================================
+target_include_directories(bitprim-api PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
+
+# Libraries.
+#==============================================================================
+target_link_libraries(bitprim-api PUBLIC ${CONAN_LIBS})
